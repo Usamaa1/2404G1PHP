@@ -2,11 +2,18 @@
 
     require 'connection.php';
 
+    session_start();
 
-    $btn = $_POST['btn'];
+    if(isset($_SESSION['userId']))
+    {
+        echo "<script>location.href='index.php'</script>";
+
+    }
+
+
+
     
-    
-    if(isset($btn))
+    if(isset($_POST['btn']))
     {
         $password = $_POST['password'];
         $email = $_POST['email'];
@@ -26,8 +33,19 @@
         if(password_verify($password,$user['password']))
         {
 
+
+            $_SESSION['userId'] = $user['userId'];
+            $_SESSION['userName'] = $user['firstName'];
+            $_SESSION['userEmail'] = $user['email'];
+
+
             echo "<script>alert('User Login Successfully')</script>";
+
+
+
             echo "<script>location.href='index.php'</script>";
+
+
 
         }
         else

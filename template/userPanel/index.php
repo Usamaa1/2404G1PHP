@@ -1,3 +1,19 @@
+<?php 
+
+session_start();
+
+
+if(!isset($_SESSION['userId']))
+{
+    echo "<script>location.href='login.php'</script>";
+
+}
+
+
+?>
+
+
+
 <!DOCTYPE html>
 <html class="no-js" lang="en">
 
@@ -39,7 +55,7 @@
             <div class="container">
                 <div class="top-bar left">
                     <ul class="horizontal-menu">
-                        <li><a href="#"><i class="fa fa-envelope" aria-hidden="true"></i>Organic@company.com</a></li>
+                        <li><a href="#"><i class="fa fa-envelope" aria-hidden="true"></i><?= $_SESSION['userEmail'] ?></a></li>
                         <li><a href="#">Free Shipping for all Order of $99</a></li>
                     </ul>
                 </div>
@@ -66,7 +82,7 @@
                                 <option value="jp">Japan (JPY)</option>
                             </select>
                         </li>
-                        <li><a href="login.html" class="login-link"><i class="biolife-icon icon-login"></i>Login/Register</a></li>
+                        <li><a  class="login-link" id="logoutBtn"><i class="biolife-icon icon-login"></i>Logout</a></li>
                     </ul>
                 </div>
             </div>
@@ -3252,6 +3268,32 @@
     <script src="assets/js/slick.min.js"></script>
     <script src="assets/js/biolife.framework.js"></script>
     <script src="assets/js/functions.js"></script>
+
+
+    <script>
+
+
+    let logoutBtn = document.getElementById('logoutBtn');
+
+    logoutBtn.addEventListener('click',()=>{
+       let r = confirm("Are you sure to logout")
+       console.log(r)
+       if(r)
+       {
+        location.href = 'logout.php'
+       }
+       else
+       {
+        location.href = '#'
+       }
+    })
+
+
+
+
+    </script>
+
+
 </body>
 
 </html>
