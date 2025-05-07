@@ -15,12 +15,14 @@ if(!isset($_SESSION['userId']))
 <?php 
 include 'connection.php';
 
+$productId = $_GET['prodId'];
 
-$productsFetchQuery = "SELECT products.prodId, products.prodName, products.prodPrice, products.prodCutPrice, products.prodDesc, products.prodImage, category.category_id, category.category_name FROM `products` INNER JOIN `category` ON products.categoryId = category.category_id;";
+
+$productsFetchQuery = "SELECT products.prodId, products.prodName, products.prodPrice, products.prodCutPrice, products.prodDesc, products.prodImage, category.category_id, category.category_name FROM `products` INNER JOIN `category` ON products.categoryId = category.category_id WHERE products.prodId = $productId;";
 
 $result = mysqli_query($connect, $productsFetchQuery);
 
-$products = $result->fetch_all(MYSQLI_ASSOC);
+$products = $result->fetch_assoc();
 
 echo "<pre>";
 print_r($products);
@@ -859,8 +861,11 @@ echo "</pre>";
                             <li><img src="assets/images/details-product/thumb_07.jpg" alt="" width="88" height="88"></li>
                         </ul>
                     </div>
+                    <?php 
+                    foreach( $products as $product ){ 
+                    ?>
                     <div class="product-attribute">
-                        <h3 class="title">Organic 10 Assorted Flavors Jelly Beans, 5.5 Oz</h3>
+                        <h3 class="title"><?php $product['$productName'] ?></h3>
                         <div class="rating">
                             <p class="star-rating"><span class="width-80percent"></span></p>
                             <span class="review-count">(04 Reviews)</span>
@@ -889,6 +894,8 @@ echo "</pre>";
                             <p class="for-today">Pree Pickup Today</p>
                         </div>
                     </div>
+
+                    <?php } ?>
                     <div class="action-form">
                         <div class="quantity-box">
                             <span class="title">Quantity:</span>

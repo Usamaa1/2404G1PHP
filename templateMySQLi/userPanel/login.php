@@ -50,14 +50,6 @@ if (isset($_POST['btn'])) {
 
 
 
-?>
-
-
-
-
-
-
-
 
 
 <!DOCTYPE html>
