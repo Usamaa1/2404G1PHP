@@ -31,11 +31,23 @@ $categoryResult = mysqli_query($connect, $categoryQuery);
 $categoryData = mysqli_fetch_all($categoryResult, MYSQLI_ASSOC);
 
 
+$categoryList = [];
+foreach ($categoryData as $categoryName) {
+    echo $categoryName['category_name'];
+    $categoryList[] = $categoryName['category_name'];
+    echo "<br>";
+}
+print_r($categoryList);
+$allCategoryList = implode("','", $categoryList);
+echo "<br>";
+echo $allCategoryList;
+
 
 if (isset($_GET['btnSearch'])) {
 
     $search = $_GET['search'];
-    $productsSearchQuery = "SELECT products.prodId, products.prodName, products.prodPrice, products.prodCutPrice, products.prodDesc, products.prodImage, category.category_id, category.category_name FROM `products` INNER JOIN `category` ON products.categoryId = category.category_id WHERE category.category_name IN () AND products.prodName LIKE '$search%'";
+    $category = $_GET['category'];
+    $productsSearchQuery = "SELECT products.prodId, products.prodName, products.prodPrice, products.prodCutPrice, products.prodDesc, products.prodImage, category.category_id, category.category_name FROM `products` INNER JOIN `category` ON products.categoryId = category.category_id WHERE category.category_name IN ('$category') AND products.prodName LIKE '$search%'";
 
     $result = mysqli_query($connect, $productsSearchQuery);
 
@@ -421,9 +433,9 @@ if (isset($_GET['btnSearch'])) {
                                         <input type="text" name="search" class="input-text"
                                             placeholder="Search here...">
                                         <select name="category">
-                                            <option value="">All...</option>
+                                            <option value="<?= $allCategoryList ?>">All...</option>
                                             <?php foreach ($categoryData as $category) { ?>
-                                                <option value="<?= $category['category_id'] ?>">
+                                                <option value="<?= $category['category_name'] ?>">
                                                     <?= $category['category_name'] ?></option>
                                             <?php } ?>
 
@@ -967,13 +979,13 @@ if (isset($_GET['btnSearch'])) {
                             <form action="#" class="form-search" name="desktop-seacrh" method="get">
                                 <input type="text" name="search" class="input-text" placeholder="Search here...">
                                 <select name="category">
-                                            <option value="" selected disabled>Choose category....</option>
+                                            <option value="<?=$allCategoryList ?>" >All....</option>
                                             <?php foreach ($categoryData as $category) { ?>
-                                                <option value="<?= $category['category_id'] ?>">
+                                                <option value="<?= $category['category_name'] ?>">
                                                     <?= $category['category_name'] ?></option>
                                             <?php } ?>
+                                </select>
 
-                                        </select>
                                 <button type="submit" name="btnSearch" class="btn-submit"><i
                                         class="biolife-icon icon-search"></i></button>
                             </form>
@@ -1230,7 +1242,16 @@ if (isset($_GET['btnSearch'])) {
                                 <ul class="products-list biolife-carousel nav-center-02 nav-none-on-mobile eq-height-contain"
                                     data-slick='{"rows":2 ,"arrows":true,"dots":false,"infinite":true,"speed":400,"slidesMargin":10,"slidesToShow":4, "responsive":[{"breakpoint":1200, "settings":{ "slidesToShow": 4}},{"breakpoint":992, "settings":{ "slidesToShow": 3, "slidesMargin":25 }},{"breakpoint":768, "settings":{ "slidesToShow": 2, "slidesMargin":15}}]}'>
 
-                                    <?php foreach ($products as $product) { ?>
+
+                                    <?php
+                                    if(empty($products)){
+                                        echo "<h3>No items available</h3>";
+                                    }
+                                    else {
+                                    
+                                    foreach ($products as $product) { 
+                                        
+                                        ?>
 
                                         <li class="product-item">
                                             <div class="contain-product layout-default">
@@ -1269,7 +1290,7 @@ if (isset($_GET['btnSearch'])) {
                                             </div>
                                         </li>
 
-                                    <?php } ?>
+                                    <?php }} ?>
                                 </ul>
                             </div>
                             <div id="tab01_2nd" class="tab-contain ">

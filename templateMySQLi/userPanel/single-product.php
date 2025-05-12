@@ -843,13 +843,8 @@ echo "</pre>";
                 <div class="sumary-product single-layout">
                     <div class="media">
                         <ul class="biolife-carousel slider-for" data-slick='{"arrows":false,"dots":false,"slidesMargin":30,"slidesToShow":1,"slidesToScroll":1,"fade":true,"asNavFor":".slider-nav"}'>
-                            <li><img src="assets/images/details-product/detail_01.jpg" alt="" width="500" height="500"></li>
-                            <li><img src="assets/images/details-product/detail_02.jpg" alt="" width="500" height="500"></li>
-                            <li><img src="assets/images/details-product/detail_03.jpg" alt="" width="500" height="500"></li>
-                            <li><img src="assets/images/details-product/detail_04.jpg" alt="" width="500" height="500"></li>
-                            <li><img src="assets/images/details-product/detail_05.jpg" alt="" width="500" height="500"></li>
-                            <li><img src="assets/images/details-product/detail_06.jpg" alt="" width="500" height="500"></li>
-                            <li><img src="assets/images/details-product/detail_07.jpg" alt="" width="500" height="500"></li>
+                            <li><img src="../images/<?php echo $products['prodImage'] ?>" alt="" width="500" height="500"></li>
+                            
                         </ul>
                         <ul class="biolife-carousel slider-nav" data-slick='{"arrows":false,"dots":false,"centerMode":false,"focusOnSelect":true,"slidesMargin":10,"slidesToShow":4,"slidesToScroll":1,"asNavFor":".slider-for"}'>
                             <li><img src="assets/images/details-product/thumb_01.jpg" alt="" width="88" height="88"></li>
@@ -861,22 +856,20 @@ echo "</pre>";
                             <li><img src="assets/images/details-product/thumb_07.jpg" alt="" width="88" height="88"></li>
                         </ul>
                     </div>
-                    <?php 
-                    foreach( $products as $product ){ 
-                    ?>
+               
                     <div class="product-attribute">
-                        <h3 class="title"><?php $product['$productName'] ?></h3>
+                        <h3 class="title"><?php echo $products['prodName'] ?></h3>
                         <div class="rating">
                             <p class="star-rating"><span class="width-80percent"></span></p>
                             <span class="review-count">(04 Reviews)</span>
                             <span class="qa-text">Q&A</span>
-                            <b class="category">By: Natural food</b>
+                            <b class="category"><?php echo $products['category_name'] ?></b>
                         </div>
                         <span class="sku">Sku: #76584HH</span>
-                        <p class="excerpt">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris vel maximus lacus. Duis ut mauris eget justo dictum tempus sed vel tellus.</p>
+                        <p class="excerpt"><?php echo $products['prodDesc'] ?></p>
                         <div class="price">
-                            <ins><span class="price-amount"><span class="currencySymbol">£</span>85.00</span></ins>
-                            <del><span class="price-amount"><span class="currencySymbol">£</span>95.00</span></del>
+                            <ins><span class="price-amount"><span class="currencySymbol">£</span><?php echo $products['prodPrice'] ?></span></ins>
+                            <del><span class="price-amount"><span class="currencySymbol">£</span><?php echo $products['prodCutPrice'] ?></span></del>
                         </div>
                         <div class="product-atts">
                             <div class="atts-item">
@@ -895,19 +888,19 @@ echo "</pre>";
                         </div>
                     </div>
 
-                    <?php } ?>
                     <div class="action-form">
                         <div class="quantity-box">
                             <span class="title">Quantity:</span>
                             <div class="qty-input">
-                                <input type="text" name="qty12554" value="1" data-max_value="20" data-min_value="1" data-step="1">
-                                <a href="#" class="qty-btn btn-up"><i class="fa fa-caret-up" aria-hidden="true"></i></a>
-                                <a href="#" class="qty-btn btn-down"><i class="fa fa-caret-down" aria-hidden="true"></i></a>
+                                <input id="quantity" type="text" name="qty" value="1" data-max_value="20" data-min_value="1" data-step="1">
+                                <a href="#" id="qtyUp" class="qty-btn btn-up"><i class="fa fa-caret-up" aria-hidden="true"></i></a>
+                                <a href="#" id="qtyDown" class="qty-btn btn-down"><i class="fa fa-caret-down" aria-hidden="true"></i></a>
                             </div>
                         </div>
                         <div class="total-price-contain">
                             <span class="title">Total Price:</span>
-                            <p class="price">£199.99</p>
+                            <p class="price" id="totalPrice">£<?php echo $products['prodPrice'] ?></p>
+                            <input type="text" id="totalPriceInput" value="<?= $products['prodPrice'] ?>" />
                         </div>
                         <div class="buttons">
                             <a href="#" class="btn add-to-cart-btn">add to cart</a>
@@ -1592,6 +1585,47 @@ echo "</pre>";
     <script src="assets/js/slick.min.js"></script>
     <script src="assets/js/biolife.framework.js"></script>
     <script src="assets/js/functions.js"></script>
+    <script>
+        let quantity = document.querySelector('#quantity')
+        let qtyUp = document.getElementById('qtyUp');
+       let qtyDown = document.getElementById('qtyDown');
+       let totalPriceInput = document.getElementById('totalPriceInput');
+
+       let currentQuantity;
+        let currentTotalPrice =0;
+
+        quantity.addEventListener("keyup",(e)=>{
+            console.log(quantity.value)
+            console.log(totalPriceInput)
+       })
+
+   
+
+       qtyUp.addEventListener('click',()=>{
+        
+        currentTotalPrice = 0;
+        console.log(Number(quantity.value) + 1);
+        // console.log(totalPriceInput.value)
+        currentQuantity = Number(quantity.value) + 1;
+        console.log(totalPriceInput.value * currentQuantity)
+        currentTotalPrice = totalPriceInput.value * currentQuantity
+
+        totalPriceInput.value = currentTotalPrice
+
+        
+
+    })
+       qtyDown.addEventListener('click',()=>{
+        if(Number(quantity.value) > 1 )
+        {
+            console.log(quantity.value - 1)
+        }
+       })
+
+    //    totalPriceInput.value = quantity.value * totalPriceInput.value
+
+
+    </script>
 </body>
 
 </html>
