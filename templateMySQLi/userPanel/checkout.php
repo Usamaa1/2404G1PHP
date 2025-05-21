@@ -1,6 +1,94 @@
 <?php 
-
 session_start();
+
+include 'connection.php';
+
+$userId = $_SESSION['userId'];
+$userEmail =  $_SESSION['userEmail'];
+
+
+
+// CART FETCH QUERY
+
+$totalPriceQuery = "SELECT SUM(cart.quantity * products.prodPrice) as totalPrice FROM `cart` JOIN `products` ON cart.prod_id = products.prodId WHERE `user_id` = '$userId'";
+
+$totalPriceResult = mysqli_query($connect, $totalPriceQuery);
+$fetchTotalPrice = $totalPriceResult->fetch_assoc();
+echo "<pre>";
+print_r($fetchTotalPrice);
+echo "</pre>";
+
+
+
+// CART FETCH QUERY
+
+$fetchAddToCartQuery = "SELECT * FROM `cart` JOIN `products` ON cart.prod_id = products.prodId WHERE `user_id` = '$userId'";
+
+$addToCartResult = mysqli_query($connect, $fetchAddToCartQuery);
+$fetchAddToCartProducts = $addToCartResult->fetch_all(MYSQLI_ASSOC);
+echo "<pre>";
+print_r($fetchAddToCartProducts);
+echo "</pre>";
+
+
+
+
+// Order Place Query
+
+if(isset($_POST['placeOrderBtn']))
+{
+
+
+$phone = $_POST['phone'];
+$city = $_POST['city'];
+$zipcode = $_POST['zipcode'];
+$primaryAddress = $_POST['primaryAddress'];
+$secondaryAddress = $_POST['secondaryAddress'];
+$comments = $_POST['comments'];
+
+
+
+
+$placeOrderQuery = "INSERT INTO `orders`(`phone`, `city`, `zip code`, `primary_address`, `secondary_address`, `user_comments`, `user_id`, `status`) VALUES ('$phone','$city','$zipcode','$primaryAddress','$secondaryAddress','$comments','$userId','processing')";
+
+
+$placeOrderQueryResult = mysqli_query($connect,$placeOrderQuery);
+
+echo "<pre>";
+print_r($placeOrderQueryResult);
+echo "</pre>";
+
+$lastOrderId =  mysqli_insert_id($connect);
+
+
+
+if(mysqli_query($connect,$placeOrderQuery)){
+
+
+    foreach ($fetchAddToCartProducts as $singleCartProduct) {
+
+        echo $singleCartProduct['prodId'];
+    
+        $orderItemQuery = "INSERT INTO `order_item`(`order_id`, `prod_id`, `quantity`) VALUES ('$lastOrderId','".$singleCartProduct['prodId']."','".$singleCartProduct['quantity']."')";
+       $orderItemQueryResult =  mysqli_query($connect,$orderItemQuery);
+    
+    
+    
+    
+    }
+
+    
+
+
+
+}
+
+
+
+
+
+
+}
 
 
 ?>
@@ -821,31 +909,39 @@ session_start();
                                         <div class="box-content">
                                             <p class="txt-desc">Checking out as a <a class="pmlink" href="#">Guest?</a> You’ll be able to save your details to create an account with us later.</p>
                                             <div class="login-on-checkout">
-                                                <form action="#" name="frm-login" method="post">
+                                                <form method="post">
                                                     <p class="form-row">
-                                                        <label for="input_email">Email Address</label>
-                                                        <input type="email" name="email" id="input_email" value="" placeholder="Your email">
-                                                        <button type="submit" name="btn-sbmt" class="btn">Continue As Guest</button>
+                                                        <label for="input_email">Phone</label>
+                                                        <input type="text" name="phone" id="input_email" value="" placeholder="Your phone">
+                                                       
                                                     </p>
                                                     <p class="form-row">
-                                                        <input type="checkbox" name="subcribe" id="input_subcribe" >
-                                                        <label for="input_subcribe">Subscribe to our newsletter</label>
+                                                        <label for="input_email">City Name</label>
+                                                        <input type="text" name="city" id="input_email" value="" placeholder="Your city">
                                                     </p>
-                                                    <p class="msg">Already have an account? <a href="#" class="link-forward">Sign in now</a></p>
+                                                    <p class="form-row">
+                                                        <label for="input_email">Zipcode</label>
+                                                        <input type="text" name="zipcode" id="input_email" value="" placeholder="Your zipcode">
+                                                    </p>
+                                                    <p class="form-row">
+                                                        <label for="input_email">Primary Address</label>
+                                                        <input type="text" name="primaryAddress" id="input_email" value="" placeholder="Your primary Address">
+                                                    </p>
+                                                    <p class="form-row">
+                                                        <label for="input_email">Secondary Address</label>
+                                                        <input type="text" name="secondaryAddress" id="input_email" value="" placeholder="Your secondary Address">
+                                                    </p>
+                                                    <p class="form-row">
+                                                        <label for="input_email">Comments</label>
+                                                        <input type="text" name="comments" id="input_email" value="" placeholder="Your comments">
+                                                    </p>
+                                                   <button name="placeOrderBtn" class="btn">Place Order</button>
                                                 </form>
                                             </div>
                                         </div>
                                     </div>
                                 </li>
-                                <li class="step 2nd">
-                                    <div class="checkout-act"><h3 class="title-box"><span class="number">2</span>Shipping</h3></div>
-                                </li>
-                                <li class="step 3rd">
-                                    <div class="checkout-act"><h3 class="title-box"><span class="number">3</span>Billing</h3></div>
-                                </li>
-                                <li class="step 4th">
-                                    <div class="checkout-act"><h3 class="title-box"><span class="number">4</span>Payment</h3></div>
-                                </li>
+                              
                             </ul>
                         </div>
                     </div>
@@ -860,69 +956,44 @@ session_start();
                             <div class="cart-list-box short-type">
                                 <span class="number">2 items</span>
                                 <ul class="cart-list">
+                                    <?php foreach($fetchAddToCartProducts as $singleProduct){ ?>
                                     <li class="cart-elem">
                                         <div class="cart-item">
                                             <div class="product-thumb">
                                                 <a class="prd-thumb" href="#">
-                                                    <figure><img src="assets/images/shippingcart/pr-01.jpg" width="113" height="113" alt="shop-cart" ></figure>
+                                                    <figure><img src="../images/<?= $singleProduct['prodImage'] ?>" width="113" height="113" alt="shop-cart" ></figure>
                                                 </a>
                                             </div>
                                             <div class="info">
-                                                <span class="txt-quantity">1X</span>
-                                                <a href="#" class="pr-name">National Fresh Fruit</a>
+                                                <span class="txt-quantity"><?= $singleProduct['quantity'] ?>X</span>
+                                                <a href="#" class="pr-name"><?= $singleProduct['prodName'] ?></a>
                                             </div>
                                             <div class="price price-contain">
-                                                <ins><span class="price-amount"><span class="currencySymbol">£</span>85.00</span></ins>
-                                                <del><span class="price-amount"><span class="currencySymbol">£</span>95.00</span></del>
+                                                <ins><span class="price-amount"><span class="currencySymbol">£</span><?= $singleProduct['quantity'] * $singleProduct['prodPrice'] ?></span></ins>
                                             </div>
                                         </div>
                                     </li>
-                                    <li class="cart-elem">
-                                        <div class="cart-item">
-                                            <div class="product-thumb">
-                                                <a class="prd-thumb" href="#">
-                                                    <figure><img src="assets/images/shippingcart/pr-02.jpg" width="113" height="113" alt="shop-cart" ></figure>
-                                                </a>
-                                            </div>
-                                            <div class="info">
-                                                <span class="txt-quantity">1X</span>
-                                                <a href="#" class="pr-name">National Fresh Fruit</a>
-                                            </div>
-                                            <div class="price price-contain">
-                                                <ins><span class="price-amount"><span class="currencySymbol">£</span>85.00</span></ins>
-                                                <del><span class="price-amount"><span class="currencySymbol">£</span>95.00</span></del>
-                                            </div>
-                                        </div>
-                                    </li>
+                                    <?php } ?>
+                               
                                 </ul>
                                 <ul class="subtotal">
                                     <li>
                                         <div class="subtotal-line">
                                             <b class="stt-name">Subtotal</b>
-                                            <span class="stt-price">£170.00</span>
+                                            <span class="stt-price">£<?= $fetchTotalPrice['totalPrice'] ?></span>
                                         </div>
                                     </li>
                                     <li>
                                         <div class="subtotal-line">
                                             <b class="stt-name">Shipping</b>
-                                            <span class="stt-price">£20.00</span>
+                                            <span class="stt-price">£10.00</span>
                                         </div>
                                     </li>
-                                    <li>
-                                        <div class="subtotal-line">
-                                            <b class="stt-name">Tax</b>
-                                            <span class="stt-price">£0.00</span>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="subtotal-line">
-                                            <a href="#" class="link-forward">Promo/Gift Certificate</a>
-                                        </div>
-                                    </li>
+                                
                                     <li>
                                         <div class="subtotal-line">
                                             <b class="stt-name">total:</b>
-                                            <span class="stt-price">£190.00</span>
+                                            <span class="stt-price">£<?= $fetchTotalPrice['totalPrice'] + 10 ?></span>
                                         </div>
                                     </li>
                                 </ul>

@@ -29,9 +29,9 @@ print_r($products);
 echo "</pre>";
 
 
+// CART FETCH QUERY
 
-
-$fetchAddToCartQuery = "SELECT * FROM `cart` WHERE `prod_id` = '$productId'";
+$fetchAddToCartQuery = "SELECT * FROM `cart` WHERE `prod_id` = '$productId' AND `user_id` = '$userId'";
 
 $addToCartResult = mysqli_query($connect, $fetchAddToCartQuery);
 $fetchAddToCartProducts = $addToCartResult->fetch_assoc();
@@ -40,6 +40,15 @@ print_r($fetchAddToCartProducts);
 echo "</pre>";
 
 
+// CART COUNT QUERY
+
+$fetchCartCountQuery = "SELECT COUNT(`cart_id`) as `cart_count` FROM `cart` WHERE `user_id` = '$userId'";
+
+$countCartResult = mysqli_query($connect, $fetchCartCountQuery);
+$countCartProducts = $countCartResult->fetch_assoc();
+echo "<pre>";
+print_r($countCartProducts);
+echo "</pre>";
 
 
 if(isset($_POST['addToCartBtn'])) {
@@ -49,7 +58,22 @@ if(isset($_POST['addToCartBtn'])) {
     $cartQuery = "INSERT INTO `cart`(`prod_id`, `user_id`, `quantity`) VALUES ('$productId','$userId','$qty')";
 
     if(mysqli_query($connect, $cartQuery)){
-        echo "<script>alert('Product Added')</script>";
+        // echo "<script>alert('Product Added')</script>";
+    }
+
+
+}
+
+if(isset($_POST['removeToCartBtn'])) {
+
+    $cartId = $_POST['cartId'];
+
+    $cartQuery = "DELETE FROM `cart` WHERE `cart_id` = '$cartId'";
+
+    if(mysqli_query($connect, $cartQuery)){
+        header($_SERVER['PHP_SELF']);
+        echo "<script>alert('Cart Item Removed')</script>";
+        
     }
 
 
@@ -453,7 +477,7 @@ if(isset($_POST['addToCartBtn'])) {
                                     <a href="javascript:void(0)" class="link-to">
                                         <span class="icon-qty-combine">
                                             <i class="icon-cart-mini biolife-icon"></i>
-                                            <span class="qty">8</span>
+                                            <span class="qty"><?= $countCartProducts['cart_count'] ?></span>
                                         </span>
                                         <span class="title">My Cart -</span>
                                         <span class="sub-total">$0.00</span>
@@ -613,7 +637,7 @@ if(isset($_POST['addToCartBtn'])) {
                                                 </li>
                                             </ul>
                                             <p class="btn-control">
-                                                <a href="#" class="btn view-cart">view cart</a>
+                                                <a href="shopping-cart.php" class="btn view-cart">view cart</a>
                                                 <a href="#" class="btn">checkout</a>
                                             </p>
                                         </div>
@@ -1108,11 +1132,9 @@ if(isset($_POST['addToCartBtn'])) {
                         <input type="hidden" name="totalPriceInput" id="totalPriceInput" value="<?= $products['prodPrice'] ?>" />
                         <div class="buttons">
                       
-                        <?php if($fetchAddToCartProducts){
-
-                         ?>
-
-                                <button type="submit" name="" class="btn add-to-cart-btn" style="background-color: #333">Remove from cart</button>
+                        <?php if($fetchAddToCartProducts){ ?>
+                                <input type="hidden" name="cartId" value="<?=$fetchAddToCartProducts['cart_id'] ?>">
+                                <button type="submit" name="removeToCartBtn" class="btn add-to-cart-btn" style="background-color: #333">Remove from cart</button>
                       <?php }else { ?>
 
                             <button type="submit" name="addToCartBtn" class="btn add-to-cart-btn">add to cart</button>

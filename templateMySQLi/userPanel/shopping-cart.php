@@ -2,6 +2,37 @@
 
 session_start();
 
+include 'connection.php';
+
+$userId = $_SESSION['userId'];
+
+
+
+// CART FETCH QUERY
+
+$totalPriceQuery = "SELECT SUM(cart.quantity * products.prodPrice) as totalPrice FROM `cart` JOIN `products` ON cart.prod_id = products.prodId WHERE `user_id` = '$userId'";
+
+$totalPriceResult = mysqli_query($connect, $totalPriceQuery);
+$fetchTotalPrice = $totalPriceResult->fetch_assoc();
+echo "<pre>";
+print_r($fetchTotalPrice);
+echo "</pre>";
+
+
+
+// CART FETCH QUERY
+
+$fetchAddToCartQuery = "SELECT * FROM `cart` JOIN `products` ON cart.prod_id = products.prodId WHERE `user_id` = '$userId'";
+
+$addToCartResult = mysqli_query($connect, $fetchAddToCartQuery);
+$fetchAddToCartProducts = $addToCartResult->fetch_all(MYSQLI_ASSOC);
+echo "<pre>";
+print_r($fetchAddToCartProducts);
+echo "</pre>";
+
+
+
+
 
 ?>
 
@@ -383,94 +414,7 @@ session_start();
                                                         </div>
                                                     </div>
                                                 </li>
-                                                <li>
-                                                    <div class="minicart-item">
-                                                        <div class="thumb">
-                                                            <a href="#"><img src="assets/images/minicart/pr-02.jpg" width="90" height="90" alt="National Fresh"></a>
-                                                        </div>
-                                                        <div class="left-info">
-                                                            <div class="product-title"><a href="#" class="product-name">National Fresh Fruit</a></div>
-                                                            <div class="price">
-                                                                <ins><span class="price-amount"><span class="currencySymbol">£</span>85.00</span></ins>
-                                                                <del><span class="price-amount"><span class="currencySymbol">£</span>95.00</span></del>
-                                                            </div>
-                                                            <div class="qty">
-                                                                <label for="cart[id124][qty]">Qty:</label>
-                                                                <input type="number" class="input-qty" name="cart[id124][qty]" id="cart[id124][qty]" value="1" disabled>
-                                                            </div>
-                                                        </div>
-                                                        <div class="action">
-                                                            <a href="#" class="edit"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-                                                            <a href="#" class="remove"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div class="minicart-item">
-                                                        <div class="thumb">
-                                                            <a href="#"><img src="assets/images/minicart/pr-03.jpg" width="90" height="90" alt="National Fresh"></a>
-                                                        </div>
-                                                        <div class="left-info">
-                                                            <div class="product-title"><a href="#" class="product-name">National Fresh Fruit</a></div>
-                                                            <div class="price">
-                                                                <ins><span class="price-amount"><span class="currencySymbol">£</span>85.00</span></ins>
-                                                                <del><span class="price-amount"><span class="currencySymbol">£</span>95.00</span></del>
-                                                            </div>
-                                                            <div class="qty">
-                                                                <label for="cart[id125][qty]">Qty:</label>
-                                                                <input type="number" class="input-qty" name="cart[id125][qty]" id="cart[id125][qty]" value="1" disabled>
-                                                            </div>
-                                                        </div>
-                                                        <div class="action">
-                                                            <a href="#" class="edit"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-                                                            <a href="#" class="remove"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div class="minicart-item">
-                                                        <div class="thumb">
-                                                            <a href="#"><img src="assets/images/minicart/pr-04.jpg" width="90" height="90" alt="National Fresh"></a>
-                                                        </div>
-                                                        <div class="left-info">
-                                                            <div class="product-title"><a href="#" class="product-name">National Fresh Fruit</a></div>
-                                                            <div class="price">
-                                                                <ins><span class="price-amount"><span class="currencySymbol">£</span>85.00</span></ins>
-                                                                <del><span class="price-amount"><span class="currencySymbol">£</span>95.00</span></del>
-                                                            </div>
-                                                            <div class="qty">
-                                                                <label for="cart[id126][qty]">Qty:</label>
-                                                                <input type="number" class="input-qty" name="cart[id126][qty]" id="cart[id126][qty]" value="1" disabled>
-                                                            </div>
-                                                        </div>
-                                                        <div class="action">
-                                                            <a href="#" class="edit"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-                                                            <a href="#" class="remove"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li>
-                                                    <div class="minicart-item">
-                                                        <div class="thumb">
-                                                            <a href="#"><img src="assets/images/minicart/pr-05.jpg" width="90" height="90" alt="National Fresh"></a>
-                                                        </div>
-                                                        <div class="left-info">
-                                                            <div class="product-title"><a href="#" class="product-name">National Fresh Fruit</a></div>
-                                                            <div class="price">
-                                                                <ins><span class="price-amount"><span class="currencySymbol">£</span>85.00</span></ins>
-                                                                <del><span class="price-amount"><span class="currencySymbol">£</span>95.00</span></del>
-                                                            </div>
-                                                            <div class="qty">
-                                                                <label for="cart[id127][qty]">Qty:</label>
-                                                                <input type="number" class="input-qty" name="cart[id127][qty]" id="cart[id127][qty]" value="1" disabled>
-                                                            </div>
-                                                        </div>
-                                                        <div class="action">
-                                                            <a href="#" class="edit"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-                                                            <a href="#" class="remove"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
-                                                        </div>
-                                                    </div>
-                                                </li>
+                                          
                                             </ul>
                                             <p class="btn-control">
                                                 <a href="#" class="btn view-cart">view cart</a>
@@ -857,12 +801,13 @@ session_start();
                                     </tr>
                                     </thead>
                                     <tbody>
+                                    <?php foreach($fetchAddToCartProducts as $singleCartProduct){ ?>
                                     <tr class="cart_item">
                                         <td class="product-thumbnail" data-title="Product Name">
                                             <a class="prd-thumb" href="#">
-                                                <figure><img width="113" height="113" src="assets/images/shippingcart/pr-01.jpg" alt="shipping cart"></figure>
+                                                <figure><img width="113" height="113" src="../images/<?=$singleCartProduct['prodImage'] ?>" alt="shipping cart"></figure>
                                             </a>
-                                            <a class="prd-name" href="#">National Fresh Fruit</a>
+                                            <a class="prd-name" href="#"><?=$singleCartProduct['prodName'] ?></a>
                                             <div class="action">
                                                 <a href="#" class="edit"><i class="fa fa-pencil" aria-hidden="true"></i></a>
                                                 <a href="#" class="remove"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
@@ -870,14 +815,14 @@ session_start();
                                         </td>
                                         <td class="product-price" data-title="Price">
                                             <div class="price price-contain">
-                                                <ins><span class="price-amount"><span class="currencySymbol">£</span>85.00</span></ins>
-                                                <del><span class="price-amount"><span class="currencySymbol">£</span>95.00</span></del>
+                                                <ins><span class="price-amount"><span class="currencySymbol">£</span><?=$singleCartProduct['prodPrice'] ?></span></ins>
+                                                <del><span class="price-amount"><span class="currencySymbol">£</span><?=$singleCartProduct['prodCutPrice'] ?></span></del>
                                             </div>
                                         </td>
                                         <td class="product-quantity" data-title="Quantity">
                                             <div class="quantity-box type1">
                                                 <div class="qty-input">
-                                                    <input type="text" name="qty12554" value="1" data-max_value="20" data-min_value="1" data-step="1">
+                                                    <input type="text" name="qty12554" value="<?=$singleCartProduct['quantity'] ?>" data-max_value="20" data-min_value="1" data-step="1">
                                                     <a href="#" class="qty-btn btn-up"><i class="fa fa-caret-up" aria-hidden="true"></i></a>
                                                     <a href="#" class="qty-btn btn-down"><i class="fa fa-caret-down" aria-hidden="true"></i></a>
                                                 </div>
@@ -885,44 +830,12 @@ session_start();
                                         </td>
                                         <td class="product-subtotal" data-title="Total">
                                             <div class="price price-contain">
-                                                <ins><span class="price-amount"><span class="currencySymbol">£</span>85.00</span></ins>
-                                                <del><span class="price-amount"><span class="currencySymbol">£</span>95.00</span></del>
+                                                <ins><span class="price-amount"><span class="currencySymbol">£</span><?=$singleCartProduct['prodPrice'] * $singleCartProduct['quantity'] ?></span></ins>
                                             </div>
                                         </td>
                                     </tr>
-                                    <tr class="cart_item">
-                                        <td class="product-thumbnail" data-title="Product Name">
-                                            <a class="prd-thumb" href="#">
-                                                <figure><img width="113" height="113" src="assets/images/shippingcart/pr-02.jpg" alt="shipping cart"></figure>
-                                            </a>
-                                            <a class="prd-name" href="#">National Fresh Fruit</a>
-                                            <div class="action">
-                                                <a href="#" class="edit"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-                                                <a href="#" class="remove"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
-                                            </div>
-                                        </td>
-                                        <td class="product-price" data-title="Price">
-                                            <div class="price price-contain">
-                                                <ins><span class="price-amount"><span class="currencySymbol">£</span>85.00</span></ins>
-                                                <del><span class="price-amount"><span class="currencySymbol">£</span>95.00</span></del>
-                                            </div>
-                                        </td>
-                                        <td class="product-quantity" data-title="Quantity">
-                                            <div class="quantity-box type1">
-                                                <div class="qty-input">
-                                                    <input type="text" name="qty12554" value="1" data-max_value="20" data-min_value="1" data-step="1">
-                                                    <a href="#" class="qty-btn btn-up"><i class="fa fa-caret-up" aria-hidden="true"></i></a>
-                                                    <a href="#" class="qty-btn btn-down"><i class="fa fa-caret-down" aria-hidden="true"></i></a>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td class="product-subtotal" data-title="Total">
-                                            <div class="price price-contain">
-                                                <ins><span class="price-amount"><span class="currencySymbol">£</span>85.00</span></ins>
-                                                <del><span class="price-amount"><span class="currencySymbol">£</span>95.00</span></del>
-                                            </div>
-                                        </td>
-                                    </tr>
+                                 
+                                    <?php } ?>
                                     <tr class="cart_item wrap-buttons">
                                         <td class="wrap-btn-control" colspan="4">
                                             <a class="btn back-to-shop">Back to Shop</a>
@@ -938,18 +851,23 @@ session_start();
                             <div class="shpcart-subtotal-block">
                                 <div class="subtotal-line">
                                     <b class="stt-name">Subtotal <span class="sub">(2ittems)</span></b>
-                                    <span class="stt-price">£170.00</span>
+                                    <span class="stt-price">£<?= $fetchTotalPrice['totalPrice'] ?></span>
                                 </div>
                                 <div class="subtotal-line">
                                     <b class="stt-name">Shipping</b>
-                                    <span class="stt-price">£0.00</span>
+                                    <span class="stt-price">£10.00</span>
+                                </div>
+                                <div class="subtotal-line">
+                                    <b class="stt-name">Total Price</b>
+                                    <span class="stt-price">£<?= $fetchTotalPrice['totalPrice'] + 10 ?></span>
                                 </div>
                                 <div class="tax-fee">
                                     <p class="title">Est. Taxes & Fees</p>
                                     <p class="desc">Based on 56789</p>
                                 </div>
+                       
                                 <div class="btn-checkout">
-                                    <a href="#" class="btn checkout">Check out</a>
+                                    <a href="checkout.php" class="btn checkout">Check out</a>
                                 </div>
                                 <div class="biolife-progress-bar">
                                     <table>
